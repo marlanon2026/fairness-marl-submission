@@ -1,0 +1,79 @@
+# --- IPPO TEST CONFIGURATION ---
+
+# Core algorithm
+name: "ippo_test"
+agent_output_type: "pi_logits"
+learner: "ppo_learner"
+action_selector: "soft_policies"
+mask_before_softmax: True
+
+# Very short test run
+t_max: 20000  # Only 20k timesteps
+
+# Parallel runner for speed
+runner: "parallel"
+batch_size_run: 2  # Small batch to reduce CPU usage
+
+# Smaller buffer
+buffer_size: 500
+batch_size: 64
+buffer_cpu_only: True
+q_nstep: 5
+
+# Learning rate
+lr: 0.001
+lr_scheduler: True
+lr_decay_steps: 5000
+lr_decay_rate: 0.9
+
+# Target network updates
+target_update_interval_or_tau: 0.02
+
+# Observation settings
+obs_agent_id: True
+obs_last_action: False
+obs_individual_obs: False
+
+# PPO parameters
+entropy_coef: 0.01
+entropy_start: 0.01
+entropy_end: 0.001
+entropy_anneal_time: 5000
+
+gae_lambda: 0.95
+use_rnn: True
+normalize_advantages: True
+
+# No normalization to speed up
+standardise_returns: False
+standardise_rewards: False
+
+# PPO optimization
+critic_type: "ac_critic"
+epochs: 2
+eps_clip: 0.1
+
+# Network
+hidden_dim: 64
+
+# Gradient stability
+gradient_clip_norm: 0.5
+max_grad_norm: 0.5
+
+# Logging and checkpointing
+save_model_interval: 100000
+log_interval: 1000
+test_interval: 5000
+use_tensorboard: False
+
+# Evaluation
+test_nepisode: 5
+evaluate: True
+
+# Device
+use_cuda: False  # For CPU test run
+device: "cpu"
+
+# IPPO-specific
+independent_critics: True
+share_observations: False

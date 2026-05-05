@@ -1,0 +1,45 @@
+{
+    "width": 6,
+    "height": 6,
+    "config": {
+        "num_players": 1,
+        "use_fairness": false
+    },
+    "stations": [
+        {"name": "patient_bed_station", "x": 2, "y": 2},
+        {"name": "hospital_cart", "x": 5, "y": 2}
+    ],
+    "items": [
+        {
+            "name": "cpr_board",
+            "x": 5,
+            "y": 2,
+            "stack-level": 0,
+            "predicates": ["iscpr_board"]
+        }
+    ],
+    "players": [
+        {
+            "name": "robot",
+            "x": 0,
+            "y": 3,
+            "direction": [1, 0],
+            "actions": ["move", "moveitem"],
+            "skill_info": {
+                "moveitem": 1,
+                "compresschest": 0,
+                "giverescuebreaths": 0,
+                "giveshock": 0,
+                "givemedicine": 0
+            }
+        }
+    ],
+    "goal_description": "Move equipment",
+    "goal": [
+        {
+            "predicate": "on",
+            "args": ["cpr_board", "patient_bed_station"],
+            "ids": [1, 2]
+        }
+    ]
+}

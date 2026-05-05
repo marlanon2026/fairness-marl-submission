@@ -1,0 +1,99 @@
+# --- GPU-OPTIMIZED MAPPO Configuration for Tesla V100 (32GB) ---
+
+action_selector: "soft_policies"
+mask_before_softmax: True
+
+# ENHANCED PARALLELISM - Utilize V100's massive memory
+runner: "parallel"
+batch_size_run: 32  # INCREASED: Your V100 can handle larger batches
+
+# GPU MEMORY OPTIMIZATION - Leverage 32GB effectively
+buffer_size: 100000  # DOUBLED: More experience replay with your memory
+batch_size: 4096     # DOUBLED: Much better GPU utilization on V100
+mini_batch_size: 512 # NEW: Prevents memory spikes during training
+
+# FASTER TARGET UPDATES for quicker convergence
+target_update_interval_or_tau: 0.08  # INCREASED: More aggressive updates
+
+# LEARNING RATE OPTIMIZATION for V100 performance
+lr: 0.003           # INCREASED: Faster learning with stable large batches
+lr_scheduler: True
+lr_decay_steps: 250000  # FASTER: Accelerated decay schedule
+lr_decay_rate: 0.85     # MORE AGGRESSIVE: Faster convergence
+
+# Observation settings (optimized)
+obs_agent_id: True
+obs_last_action: False
+obs_individual_obs: False
+
+# MAPPO configuration
+agent_output_type: "pi_logits"
+learner: "ppo_learner"
+
+# ENTROPY OPTIMIZATION for faster exploration
+entropy_coef: 0.015      # INCREASED: More exploration initially
+entropy_start: 0.015     # MATCHED: Consistent starting point
+entropy_end: 0.0005      # REDUCED: Lower final entropy for exploitation
+entropy_anneal_time: 600000  # FASTER: Quicker transition to exploitation
+
+# GAE OPTIMIZATION
+gae_lambda: 0.95         # REDUCED: Faster credit assignment
+use_rnn: True
+standardise_returns: True
+standardise_rewards: True
+normalize_advantages: True
+q_nstep: 8              # INCREASED: Better n-step returns
+
+# PPO OPTIMIZATION for GPU efficiency
+critic_type: "cv_critic"
+epochs: 4               # RESTORED: Better learning with larger batches
+eps_clip: 0.25          # INCREASED: More flexible policy updates
+
+# NETWORK ARCHITECTURE OPTIMIZATION
+hidden_dim: 128         # INCREASED: V100 can handle larger networks efficiently
+rnn_hidden_dim: 128     # NEW: Larger RNN for better memory
+
+# GPU-SPECIFIC OPTIMIZATIONS
+use_cuda: True          # FORCE GPU usage
+device: "cuda"          # EXPLICIT device specification
+buffer_cpu_only: False  # Keep buffer on GPU for speed
+
+# MIXED PRECISION TRAINING (if supported)
+use_mixed_precision: True     # NEW: FP16 training for 2x speedup
+gradient_clipping: 10.0       # NEW: Prevent gradient explosion with mixed precision
+
+# ADVANCED GPU OPTIMIZATIONS
+dataloader_num_workers: 4     # NEW: Parallel data loading
+pin_memory: True              # NEW: Faster CPU-GPU transfers
+non_blocking: True            # NEW: Async GPU operations
+
+# TRAINING SCHEDULE
+name: "mappo_gpu_optimized"
+t_max: 20000000
+test_interval: 100000         # REDUCED: More frequent testing
+log_interval: 50000           # REDUCED: More frequent logging
+save_model_interval: 2500000  # REDUCED: More frequent saves for safety
+
+# CHECKPOINTING for long runs
+checkpoint_path: ""
+load_step: 0
+save_replay: False
+local_results_path: "results"
+
+# TENSORBOARD OPTIMIZATION
+use_tensorboard: False
+tb_log_interval: 10000        # REDUCED: More detailed logging
+
+# EVALUATION SETTINGS
+test_nepisode: 20            # REDUCED: Faster evaluation
+evaluate: False
+save_replay: False
+
+# REPRODUCIBILITY
+seed: 42                     # EXPLICIT: For reproducible results
+
+# ADVANCED PERFORMANCE SETTINGS
+# These will be used by your optimized run.py
+torch_deterministic: False   # Allow non-deterministic for speed
+cudnn_benchmark: True        # Enable CuDNN optimizations
+float32_matmul_precision: "medium"  # Use TF32 on V100

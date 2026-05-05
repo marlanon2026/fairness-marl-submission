@@ -1,0 +1,106 @@
+# --- GPU-OPTIMIZED QMIX Configuration for Tesla V100 (32GB) ---
+
+# EPSILON-GREEDY EXPLORATION OPTIMIZATION
+action_selector: "epsilon_greedy"
+epsilon_start: 1.0
+epsilon_finish: 0.02           # REDUCED: More exploitation faster
+epsilon_anneal_time: 80000     # REDUCED: Faster exploration to exploitation
+evaluation_epsilon: 0.05      # REDUCED: Less random evaluation
+
+# QMIX RUNNER REQUIREMENT - Must use episode runner
+runner: "episode"              # REQUIRED: QMIX needs episode runner
+batch_size_run: 1             # QMIX standard: single episode per run
+
+# GPU MEMORY OPTIMIZATION - Utilize 32GB effectively with episode runner
+buffer_size: 100000           # INCREASED: More experience replay (episode runner can handle more)
+batch_size: 8192              # INCREASED: Much larger batches for GPU efficiency
+mini_batch_size: 1024         # NEW: Larger mini-batches for episode runner
+
+# ACCELERATED LEARNING for faster convergence
+lr: 0.003                     # INCREASED: Faster learning with stable batches
+lr_scheduler: True
+lr_decay_steps: 15000         # FASTER: More aggressive schedule
+lr_decay_rate: 0.85           # MORE AGGRESSIVE: Quicker adaptation
+
+# SOFT TARGET UPDATES optimization
+target_update_interval_or_tau: 0.02  # INCREASED: Faster target network updates
+
+# Observation settings (optimized)
+obs_agent_id: True
+obs_last_action: False        
+obs_individual_obs: False
+
+# QMIX LEARNING OPTIMIZATION
+standardise_returns: True     # CHANGED: Better learning stability
+standardise_rewards: True     # CHANGED: Improved reward processing
+agent_output_type: "q"
+learner: "q_learner"
+double_q: True                # Keep double Q-learning
+
+# ENHANCED MIXER ARCHITECTURE for V100
+mixer: "qmix"
+mixing_embed_dim: 128         # DOUBLED: Better mixing capacity
+hypernet_layers: 2            # INCREASED: More expressive hypernet
+hypernet_embed: 128           # DOUBLED: Larger hypernet
+qmix_hidden_dim: 128          # NEW: Larger Q-mixing network
+
+# NETWORK ARCHITECTURE OPTIMIZATION
+use_rnn: True                 # RESTORED: Better temporal modeling on V100
+rnn_hidden_dim: 128           # NEW: Larger RNN capacity  
+hidden_dim: 128               # DOUBLED: Larger networks for V100
+
+# GPU-SPECIFIC OPTIMIZATIONS
+use_cuda: True                # Force GPU usage
+buffer_cpu_only: False        # Keep buffer on GPU
+use_mixed_precision: True     # NEW: FP16 for 2x speedup on V100
+gradient_clipping: 10.0       # NEW: Prevent gradient explosion
+
+# ADVANCED GPU PERFORMANCE SETTINGS
+dataloader_num_workers: 4     # NEW: Parallel data loading
+pin_memory: True              # NEW: Faster CPU-GPU transfers
+non_blocking: True            # NEW: Async GPU operations
+
+# TRAINING SCHEDULE OPTIMIZATION
+t_max: 2000000
+test_interval: 50000          # REDUCED: More frequent testing
+log_interval: 25000           # REDUCED: More frequent logging  
+save_model_interval: 100000   # REDUCED: More frequent saves
+
+# EVALUATION SETTINGS
+test_nepisode: 16             # REDUCED: Faster evaluation
+evaluate: False
+save_replay: False
+
+# CHECKPOINTING for long runs
+checkpoint_path: ""
+load_step: 0
+local_results_path: "results"
+
+# TENSORBOARD OPTIMIZATION
+use_tensorboard: False
+tb_log_interval: 5000         # REDUCED: More detailed logging
+
+# REPRODUCIBILITY
+seed: 42
+
+# ADVANCED PERFORMANCE TUNING
+torch_deterministic: False    # Allow non-deterministic for speed
+cudnn_benchmark: True         # Enable CuDNN optimizations
+float32_matmul_precision: "medium"  # Use TF32 on V100
+
+# Q-LEARNING SPECIFIC OPTIMIZATIONS
+td_lambda: 0.8                # NEW: Multi-step TD learning
+grad_norm_clip: 10            # NEW: Gradient clipping
+optim_alpha: 0.99             # NEW: RMSprop alpha
+optim_eps: 0.00001            # NEW: RMSprop epsilon
+
+# EXPERIENCE REPLAY ENHANCEMENTS
+prioritized_replay: False     # Keep simple for speed
+replay_buffer_size: 50000     # Ensure consistency
+
+# QMIX-SPECIFIC HYPERPARAMETERS  
+w_to_use: "w_prime"          # NEW: Use transformed weights
+mixer_non_lin: "elu"         # NEW: Better activation for mixing
+central_action_embed: 1       # NEW: Action embedding dimension
+
+name: "qmix_v100_optimized"

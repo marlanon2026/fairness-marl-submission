@@ -1,0 +1,61 @@
+# --- MAPPO Testing/Profiling Configuration ---
+
+action_selector: "soft_policies"
+mask_before_softmax: True
+
+# Parallelism settings optimized for testing
+runner: "parallel"
+batch_size_run: 8  # Reduced for faster testing cycles
+
+# Minimal buffer settings for quick iterations
+buffer_size: 2000  # Drastically reduced for testing
+batch_size: 256    # Smaller batch for quicker processing
+
+# Fast target updates for testing
+target_update_interval_or_tau: 0.1
+
+# Higher learning rate without decay for quick testing
+lr: 0.005
+lr_scheduler: False  # Disable scheduler for testing
+# lr_decay_steps and lr_decay_rate removed for testing
+
+# Observation settings (unchanged)
+obs_agent_id: True
+obs_last_action: False
+obs_individual_obs: False
+
+# Simplified MAPPO configuration for testing
+agent_output_type: "pi_logits"
+learner: "ppo_learner"
+entropy_coef: 0.01
+# Remove entropy annealing for testing simplicity
+# entropy_start, entropy_end, entropy_anneal_time removed
+
+# Simplified GAE settings
+gae_lambda: 0.95  # Standard value
+use_rnn: False    # Disable RNN for faster testing
+standardise_returns: True
+standardise_rewards: True
+normalize_advantages: True
+q_nstep: 5
+
+# Minimal PPO optimization
+critic_type: "cv_critic"
+epochs: 1  # Single pass for testing
+eps_clip: 0.2
+
+# Very small network for faster computation
+hidden_dim: 32  # Reduced network size
+
+name: "mappo_test"
+
+# Drastically reduced timeframe
+t_max: 2000  # Only 10k timesteps
+
+# Frequent checkpoints for testing
+save_model_interval: 1000
+
+# Add testing-specific parameters
+test_nepisode: 5       # Few test episodes
+test_interval: 500    # Frequent testing
+log_interval: 200      # Frequent logging

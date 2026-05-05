@@ -1,0 +1,21 @@
+env: "gymma"
+seed: 12345 
+
+env_args:
+  key: null
+  time_limit: 20        # shorter episodes
+  pretrained_wrapper: null
+  seed: 12345
+  observation_mode: "LARGE"
+
+
+test_greedy: True
+test_nepisode: 2        # fewer test episodes
+test_interval: 5000     # test more often
+log_interval: 5000      # log more frequently
+runner_log_interval: 100
+learner_log_interval: 500
+t_max: 5000             # total training steps (short)
+use_cuda: False         # optional: disable GPU for small runs
+epochs: 1
+target_update_interval_or_tau: 100

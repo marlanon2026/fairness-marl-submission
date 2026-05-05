@@ -1,0 +1,59 @@
+# --- IPPO Testing/Profiling Configuration ---
+
+action_selector: "soft_policies"
+mask_before_softmax: True
+
+# Increased parallelism for faster testing
+runner: "parallel"
+batch_size_run: 8  # Reduced for testing but still parallel
+
+# Drastically reduced buffer size for testing
+buffer_size: 2000  # Much smaller buffer for faster iteration
+batch_size: 256    # Smaller batches for quicker processing
+
+# Faster target updates for testing
+target_update_interval_or_tau: 0.1
+
+# Higher learning rate for faster iteration during testing
+lr: 0.005
+lr_scheduler: False  # Disable scheduler for testing
+# lr_decay_steps and lr_decay_rate can be removed for testing
+
+# Basic GAE settings
+gae_lambda: 0.95
+normalize_advantages: True
+
+# Observation settings (unchanged)
+obs_agent_id: True
+obs_last_action: False
+obs_individual_obs: False
+
+# PPO configuration with minimal optimization
+agent_output_type: "pi_logits"
+learner: "ppo_learner"
+entropy_coef: 0.01
+standardise_returns: True
+standardise_rewards: True
+use_rnn: False  # Setting to False for testing speed (RNNs are slower)
+q_nstep: 5
+critic_type: "ac_critic"
+
+# Minimal PPO iterations
+epochs: 1  # Single pass for testing
+eps_clip: 0.1
+
+# Very small network for faster computation
+hidden_dim: 32  # Reduced network size
+
+name: "ippo_test"
+
+# Drastically reduced for testing
+t_max: 2000  # Only 10k timesteps instead of 10M
+
+# More frequent saving for testing progress
+save_model_interval: 1000
+
+# Add test-specific parameters
+test_nepisode: 5  # Reduced number of test episodes
+test_interval: 500  # More frequent testing
+log_interval: 200  # More frequent logging

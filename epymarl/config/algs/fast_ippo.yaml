@@ -1,0 +1,68 @@
+# --- IPPO specific parameters (Super-Accelerated) ---
+action_selector: "soft_policies"
+mask_before_softmax: True
+
+# Maximum parallelism
+runner: "parallel"
+use_cuda: True
+use_torch_amp: True
+compiler_optimize: True
+n_envs: 64
+batch_size_run: 64
+num_workers: 8
+
+# Minimal buffer settings
+buffer_size: 16000
+batch_size: 8192
+minibatch_size: 4096
+num_minibatches: 2
+update_interval: 16000
+
+# Aggressive learning
+target_update_interval_or_tau: 0.1
+lr: 0.005
+lr_scheduler: True
+lr_decay_steps: 100000
+lr_decay_rate: 0.8
+optimizer: "torch_adam"
+
+# Minimal observations
+obs_agent_id: True
+obs_last_action: False
+obs_individual_obs: False
+
+# GAE settings - IPPO specific
+gamma: 0.99
+gae_lambda: 0.92
+normalize_advantages: True
+
+# IPPO configuration
+agent_output_type: "pi_logits"
+learner: "ppo_learner"
+entropy_coef: 0.01
+standardise_returns: True
+standardise_rewards: True
+use_rnn: False  # Remove RNN for speed
+q_nstep: 1
+
+# Minimal PPO optimization
+critic_type: "ac_critic"  # IPPO uses ac_critic instead of cv_critic
+epochs: 1  # Single epoch
+eps_clip: 0.1  # Original IPPO value
+
+# Minimal network
+hidden_dim: 32
+use_layer_norm: False
+dropout: 0.0
+
+# Maximum optimization
+pin_memory: True
+async_envs: True
+vectorize_env: True
+preprocess_obs: False
+
+# Core parameters
+name: "ippo_accelerated"
+t_max: 20000000
+save_model_interval: 1000000
+grad_norm_clip: 10.0

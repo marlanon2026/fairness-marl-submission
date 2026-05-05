@@ -1,0 +1,42 @@
+# --- IQL specific parameters ---
+
+# use epsilon greedy action selector
+action_selector: "epsilon_greedy"
+epsilon_start: 1.0
+epsilon_finish: 0.05
+epsilon_anneal_time: 150000
+evaluation_epsilon: 0.0
+runner: "episode"
+lr: 0.0005
+buffer_size: 50000
+batch_size: 1024
+prioritized_replay: True
+prioritized_replay_alpha: 0.6
+prioritized_replay_beta: 0.6
+prioritized_replay_eps: 1e-6
+
+# update the target network every {} episodes
+target_update_interval_or_tau: 20
+
+# Add learning rate scheduler for better convergence
+lr_scheduler: True
+lr_decay_steps: 50000
+lr_decay_rate: 0.95
+
+obs_agent_id: True
+obs_last_action: False
+obs_individual_obs: False
+
+# use the Q_Learner to train
+agent_output_type: "q"
+learner: "q_learner"
+standardise_returns: False
+standardise_rewards: False
+double_q: True
+use_rnn: True
+mixer: # Mixer becomes None
+t_max: 2000000
+
+name: "iql"
+
+save_model_interval: 1000000 # Save models after this many timesteps

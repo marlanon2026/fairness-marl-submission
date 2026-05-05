@@ -1,0 +1,31 @@
+# --- IQL specific parameters (Speed-Optimized) ---
+action_selector: "epsilon_greedy"
+epsilon_start: 1.0
+epsilon_finish: 0.05
+epsilon_anneal_time: 60000  # Reduced annealing time
+evaluation_epsilon: 0.0
+runner: "parallel"  # Changed to parallel runner
+batch_size_run: 64  # Added parallel environments
+lr: 0.001  # Increased learning rate
+buffer_size: 25000  # Reduced buffer size
+batch_size: 2048  # Increased batch size
+prioritized_replay: False  # Disabled prioritized replay for speed
+target_update_interval_or_tau: 0.01  # Switched to soft updates
+lr_scheduler: True
+lr_decay_steps: 20000  # Faster decay
+lr_decay_rate: 0.9  # Steeper decay
+obs_agent_id: True
+obs_last_action: False
+obs_individual_obs: False
+agent_output_type: "q"
+learner: "q_learner"
+standardise_returns: False
+standardise_rewards: False
+double_q: True
+use_rnn: False  # Removed RNN for speed
+use_cuda: True  # Ensured GPU usage
+use_torch_amp: True  # Added mixed precision
+hidden_dim: 64  # Specified network size
+t_max: 2000000
+name: "iql_fast"
+save_model_interval: 250000

@@ -1,0 +1,129 @@
+# --- GPU-OPTIMIZED IPPO Configuration for Tesla V100 (32GB) ---
+
+action_selector: "soft_policies"
+mask_before_softmax: True
+
+# ENHANCED PARALLELISM - Maximize V100 utilization
+runner: "parallel"
+batch_size_run: 64            # TRIPLED: Much more parallel environments
+n_workers: 16                 # NEW: More parallel workers for data collection
+
+# GPU MEMORY OPTIMIZATION - Leverage 32GB effectively
+buffer_size: 150000           # TRIPLED: Massive experience buffer
+batch_size: 6144              # TRIPLED: Much larger batches for V100
+mini_batch_size: 768          # NEW: Optimal mini-batch size for IPPO
+
+# ACCELERATED TARGET UPDATES
+target_update_interval_or_tau: 0.08  # INCREASED: Faster convergence
+
+# OPTIMIZED LEARNING RATE SCHEDULE
+lr: 0.004                     # DOUBLED: Faster learning with stable large batches
+lr_scheduler: True
+lr_decay_steps: 200000        # FASTER: More aggressive schedule
+lr_decay_rate: 0.8            # MORE AGGRESSIVE: Quicker adaptation
+
+# ENHANCED GAE COMPUTATION
+gae_lambda: 0.97              # INCREASED: Better bias-variance tradeoff
+normalize_advantages: True
+standardise_returns: True
+standardise_rewards: True
+
+# Observation settings (optimized)
+obs_agent_id: True
+obs_last_action: False
+obs_individual_obs: False
+
+# IPPO-SPECIFIC OPTIMIZATIONS
+agent_output_type: "pi_logits"
+learner: "ppo_learner"
+
+# ENTROPY OPTIMIZATION for better exploration
+entropy_coef: 0.02            # DOUBLED: More exploration initially
+entropy_start: 0.02           # NEW: Explicit starting entropy
+entropy_end: 0.001            # NEW: Lower final entropy
+entropy_anneal_time: 800000   # NEW: Gradual entropy decay
+
+# ADVANCED PPO SETTINGS
+use_rnn: True
+rnn_hidden_dim: 256           # NEW: Larger RNN for better memory
+q_nstep: 8                    # INCREASED: Better n-step returns
+critic_type: "ac_critic"
+
+# PPO OPTIMIZATION - Balanced for V100
+epochs: 6                     # DOUBLED: More optimization with larger batches
+eps_clip: 0.15                # INCREASED: More flexible policy updates
+value_loss_coef: 0.5          # NEW: Balanced value function learning
+max_grad_norm: 0.5            # NEW: Gradient clipping for stability
+
+# NETWORK ARCHITECTURE OPTIMIZATION
+hidden_dim: 256               # QUADRUPLED: Much larger networks for V100
+actor_hidden_dim: 256         # NEW: Separate actor network size
+critic_hidden_dim: 256        # NEW: Separate critic network size
+
+# GPU-SPECIFIC OPTIMIZATIONS
+use_cuda: True                # Force GPU usage
+buffer_cpu_only: False        # Keep buffer on GPU for speed
+use_mixed_precision: True     # NEW: FP16 training for 2x speedup
+gradient_clipping: 10.0       # NEW: Prevent gradient explosion
+
+# ADVANCED GPU PERFORMANCE SETTINGS
+dataloader_num_workers: 8     # NEW: More parallel data loading
+pin_memory: True              # NEW: Faster CPU-GPU transfers
+non_blocking: True            # NEW: Async GPU operations
+prefetch_factor: 4            # NEW: Data prefetching optimization
+
+# IPPO-SPECIFIC ENHANCEMENTS
+shared_params: False          # NEW: Independent agent parameters
+agent_specific_networks: True # NEW: Each agent has own networks
+centralized_critic: False     # NEW: Fully decentralized IPPO
+
+# TRAINING SCHEDULE OPTIMIZATION
+name: "ippo_v100_optimized"
+t_max: 20000000
+test_interval: 80000          # REDUCED: More frequent testing
+log_interval: 40000           # REDUCED: More frequent logging
+save_model_interval: 2000000  # REDUCED: More frequent saves
+
+# EVALUATION SETTINGS
+test_nepisode: 24             # INCREASED: Better evaluation statistics
+evaluate: False
+save_replay: False
+
+# CHECKPOINTING for long runs
+checkpoint_path: ""
+load_step: 0
+local_results_path: "results"
+
+# TENSORBOARD OPTIMIZATION
+use_tensorboard: False
+tb_log_interval: 8000         # REDUCED: More detailed logging
+
+# REPRODUCIBILITY
+seed: 42
+
+# ADVANCED PERFORMANCE TUNING
+torch_deterministic: False    # Allow non-deterministic for speed
+cudnn_benchmark: True         # Enable CuDNN optimizations
+float32_matmul_precision: "medium"  # Use TF32 on V100
+
+# IPPO ALGORITHM SPECIFIC SETTINGS
+bootstrap_at_done: True       # NEW: Proper value bootstrapping
+use_value_active_masks: True  # NEW: Handle variable episode lengths
+use_policy_active_masks: True # NEW: Mask invalid actions properly
+
+# REWARD PROCESSING OPTIMIZATION
+reward_normalization: True    # NEW: Normalize rewards for stability
+advantage_normalization: True # NEW: Normalize advantages
+return_normalization: True    # NEW: Normalize returns
+
+# EXPLORATION ENHANCEMENTS
+action_noise: 0.0             # NEW: Action noise for exploration
+param_noise: False            # NEW: Parameter noise (disabled for speed)
+
+# MEMORY MANAGEMENT
+episode_limit: 50             # Match your environment
+buffer_warmup_steps: 10000    # NEW: Buffer warmup before training
+
+# PERFORMANCE MONITORING
+log_rl_stats_interval: 10000  # NEW: Detailed RL statistics logging
+save_buffer_interval: 1000000 # NEW: Save experience buffer periodically

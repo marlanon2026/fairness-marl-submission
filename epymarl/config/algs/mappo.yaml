@@ -1,0 +1,95 @@
+# MAPPO FAST+STABLE CONFIG - 20M in 5 days with good learning
+name: "mappo"
+agent_output_type: "pi_logits"
+learner: "ppo_learner"
+action_selector: "soft_policies"
+mask_before_softmax: True
+
+# MAPPO-specific settings
+critic_type: "cv_critic"
+use_centralized_v: True
+share_observations: True
+use_policy_active_masks: True
+use_value_active_masks: True
+
+# Training duration
+t_max: 30000000
+
+# CRITICAL SPEED SETTING - Main acceleration
+runner: "parallel"
+batch_size_run: 80  # 4x original - massive parallelization!
+# Adjust down if memory issues
+
+# Learning hyperparameters - KEEP STABLE FOR MAPPO
+buffer_size: 50000  # Keep original for centralized critic
+batch_size: 2048    # Keep original - critical for MAPPO
+buffer_cpu_only: True
+
+# Core PPO settings - proven to work
+lr: 0.002  # Keep original
+lr_scheduler: True
+lr_decay_steps: 300000
+lr_decay_rate: 0.9
+epochs: 3  # Keep original - essential for centralized critic
+eps_clip: 0.2  # Keep MAPPO default
+
+# MAPPO entropy annealing
+entropy_coef: 0.01
+entropy_start: 0.01
+entropy_end: 0.001
+entropy_anneal_time: 800000
+
+# Keep all original learning settings
+gae_lambda: 0.97  # MAPPO specific
+gamma: 0.99
+use_rnn: True
+normalize_advantages: True
+standardise_returns: False
+standardise_rewards: False
+add_value_last_step: True
+
+# Network and optimization
+hidden_dim: 64
+optim_alpha: 0.99
+optim_eps: 1e-05
+
+# Observation settings
+obs_agent_id: True
+obs_last_action: False
+obs_individual_obs: False
+
+# Speed optimizations (non-critical)
+save_model_interval: 5000000  # Less frequent saves
+log_interval: 100000  # Less frequent logging
+learner_log_interval: 100000
+runner_log_interval: 5000  # Less frequent runner logs
+test_interval: 1000000  # Less frequent testing
+test_nepisode: 50  # Fewer test episodes
+
+# Computation optimizations
+torch_threads: 12  # Increase for parallel envs
+use_tensorboard: False
+torch_deterministic: False
+use_cuda: True
+device: "cuda"
+
+# Minibatch processing (helps with centralized critic)
+minibatch_size: 512  # Process in chunks
+num_minibatches: 4   # 2048/512 = 4
+
+# MAPPO-specific optimizations
+value_loss_coef: 0.5
+target_update_interval_or_tau: 0.05  # Keep stable
+value_normalisation: False  # Speed optimization
+
+# Other settings
+env: "gymma"
+env_name: "multiagent_giveshock_spec"
+seed: 12345
+q_nstep: 5
+mac: "basic_mac"
+save_replay: False
+render: False
+evaluate: True
+test_greedy: True
+max_episode_length: 50

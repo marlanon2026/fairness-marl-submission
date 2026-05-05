@@ -1,0 +1,59 @@
+{
+    "width": 3,
+    "height": 3,
+    "config": {
+        "num_compressions": {
+            "patient": 3,
+            "default": 3
+        }
+    },
+    "stations": [
+        {
+            "name": "table",
+            "x": 1,
+            "y": 4,
+            "id": "A"
+        },
+        {
+            "name": "patient_legs",
+            "x": 2, 
+            "y": 1  
+        },
+        {
+            "name": "patient_bed_station",
+            "x": 2, 
+            "y": 2
+        }
+    ],
+    "items": [
+        {
+            "name": "patient",
+            "x": 2, 
+            "y": 2,
+            "stack-level": 0,
+            "predicates": [
+                "ispatient", "ischestcompressable"
+            ],
+            "id": "a"
+        }
+    ],
+    "players": [
+        {
+            "name": "robot",
+            "x": 0,
+            "y": 2,
+            "direction": [0, 1],
+            "actions": [
+                "move",
+                "compresschest"
+            ]
+        }
+    ],
+    "goal": [
+        {
+            "predicate": "ischestcompressed",
+            "args": ["patient"],
+            "ids": ["a"]
+        }
+    ]
+}

@@ -1,0 +1,108 @@
+# --- Updated VDN Configuration ---
+
+# Action selection with improved exploration schedule
+action_selector: "epsilon_greedy"
+epsilon_start: 1.0
+epsilon_finish: 0.05  # Lower final epsilon for better exploitation
+epsilon_anneal_time: 500000  # Extended annealing for thorough exploration
+evaluation_epsilon: 0.0
+
+# Training setup
+runner: "episode"
+
+# Experience replay improvements
+buffer_size: 100000  # Increased buffer for better sample diversity
+batch_size: 512  # Smaller batches for more frequent updates
+prioritized_replay: True  # Add prioritized experience replay
+prioritized_replay_alpha: 0.6
+prioritized_replay_beta: 0.4
+prioritized_replay_beta_increment: 0.001
+prioritized_replay_eps: 1e-6
+
+# Learning rate configuration
+lr: 0.0005  # Slightly reduced for stability
+lr_scheduler: True
+lr_scheduler_type: "exponential"
+lr_decay_steps: 25000  # More frequent decay steps
+lr_decay_rate: 0.98  # Gentler decay
+
+# Target network updates
+target_update_interval_or_tau: 1000  # Switch to step-based updates
+target_update_mode: "hard"  # or "soft" with tau=0.005
+
+# Observation configuration
+obs_agent_id: True
+obs_last_action: True  # Enable for better coordination
+obs_individual_obs: False
+
+# Q-learning configuration
+standardise_returns: False
+standardise_rewards: False  # Enable for training stability
+agent_output_type: "q"
+learner: "q_learner"
+double_q: True
+use_rnn: True
+rnn_hidden_dim: 64  # Specify RNN architecture
+rnn_type: "LSTM"  # or "GRU"
+
+# VDN mixer configuration
+mixer: "vdn"
+mixer_args:
+  embed_dim: 32  # Embedding dimension for mixer
+
+# Training parameters
+t_max: 2000000
+train_interval: 4  # Train every 4 steps
+learning_starts: 10000  # Warm-up period
+grad_norm_clip: 10.0  # Gradient clipping
+
+# Evaluation and checkpointing
+save_model_interval: 250000  # More frequent saving
+evaluate_interval: 50000
+test_nepisode: 32  # More test episodes for better evaluation
+test_interval: 50000
+
+# Algorithm name
+name: "vdn"
+
+# Additional stability improvements
+reward_clipping: True
+reward_clipping_range: [-1.0, 1.0]
+huber_loss: True  # Robust loss function
+huber_delta: 1.0
+
+# Multi-agent coordination enhancements
+mac: "basic_mac"  # Multi-agent controller
+action_space_type: "discrete"
+
+# Logging and monitoring
+log_interval: 5000
+use_tensorboard: False
+save_replay_buffer: False
+
+# VDN-specific optimizations
+mixing_embed_dim: 32
+hypernet_layers: 2
+hypernet_embed: 64
+
+# Advanced training techniques
+use_cuda: True  # Enable GPU acceleration if available
+seed: 42  # For reproducibility
+epsilon_anneal_type: "linear"  # Linear epsilon decay
+
+# Environment interaction
+episode_limit: null  # Let environment determine episode length
+env_args: {}  # Environment-specific arguments
+
+# Optimization improvements
+optimizer: "adam"  # Explicitly set optimizer
+adam_eps: 1e-8
+weight_decay: 0.0001  # L2 regularization
+
+# Curriculum learning (optional)
+curriculum_learning: False
+curriculum_steps: []
+
+# Multi-processing (if supported)
+n_workers: 1  # Number of parallel workers
+worker_seed_offset: 0

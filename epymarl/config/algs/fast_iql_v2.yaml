@@ -1,0 +1,76 @@
+# --- Updated IQL Configuration ---
+
+# Action selection with improved exploration
+action_selector: "epsilon_greedy"
+epsilon_start: 1.0
+epsilon_finish: 0.01  # Lower final epsilon for better exploitation
+epsilon_anneal_time: 200000  # Extended annealing for better exploration
+evaluation_epsilon: 0.0
+
+# Training setup
+runner: "episode"
+lr: 0.0003  # Slightly lower learning rate for stability
+buffer_size: 100000  # Increased buffer size for better sample diversity
+batch_size: 512  # Reduced batch size for more frequent updates
+prioritized_replay: True
+prioritized_replay_alpha: 0.6
+prioritized_replay_beta: 0.4  # Start lower, can be annealed up
+prioritized_replay_beta_increment: 0.001  # Gradual increase
+prioritized_replay_eps: 1e-6
+
+# Target network updates
+target_update_interval_or_tau: 1000  # More frequent target updates (in steps, not episodes)
+target_update_mode: "hard"  # or "soft" for tau-based updates
+
+# Learning rate scheduling
+lr_scheduler: True
+lr_scheduler_type: "exponential"  # or "cosine", "step"
+lr_decay_steps: 25000  # More frequent decay
+lr_decay_rate: 0.99  # Gentler decay
+
+# Observation configuration
+obs_agent_id: True
+obs_last_action: True  # Often helpful for coordination
+obs_individual_obs: False
+
+# Q-learning specific
+agent_output_type: "q"
+learner: "q_learner"
+standardise_returns: False
+standardise_rewards: False  # Often beneficial for training stability
+double_q: True
+use_rnn: True
+rnn_hidden_dim: 64  # Specify RNN architecture
+
+# Mixer configuration (if using QMIX/VDN)
+mixer: null  # Keep as null for IQL
+
+# Training parameters
+t_max: 2000000
+train_interval: 4  # Train every 4 steps
+learning_starts: 10000  # Start learning after initial exploration
+grad_norm_clip: 10.0  # Gradient clipping for stability
+
+# Evaluation and saving
+save_model_interval: 500000  # More frequent model saving
+evaluate_interval: 50000  # Regular evaluation
+test_nepisode: 20  # Number of test episodes
+test_interval: 50000
+
+# Algorithm name
+name: "iql"
+
+# Additional improvements
+reward_standardization: True
+reward_clipping: False
+huber_loss: True  # Robust loss function
+huber_delta: 1.0
+
+# Logging and debugging
+log_interval: 10000
+use_tensorboard: False
+save_replay_buffer: False  # Set to True if you want to save/load buffer
+
+# Multi-agent specific
+agent_output_type: "q"
+mac: "basic_mac"  # Multi-agent controller

@@ -1,0 +1,34 @@
+# --- QMIX specific parameters (Speed-Optimized) ---
+action_selector: "epsilon_greedy"
+epsilon_start: 1.0
+epsilon_finish: 0.05
+epsilon_anneal_time: 100000  # Reduced annealing time
+evaluation_epsilon: 0.1
+runner: "episode"  # Changed to parallel runner
+batch_size_run: 64  # Added parallel environments
+buffer_size: 25000  # Reduced buffer size
+batch_size: 2048  # Increased batch size
+lr: 0.002  # Increased learning rate
+lr_scheduler: True
+lr_decay_steps: 20000  # Faster decay
+lr_decay_rate: 0.9  # Steeper decay
+target_update_interval_or_tau: 0.01  # Switched to soft updates
+obs_agent_id: True
+obs_last_action: False
+obs_individual_obs: False
+standardise_returns: False
+standardise_rewards: False
+agent_output_type: "q"
+learner: "q_learner"
+double_q: True
+mixer: "qmix"
+use_rnn: False  # Removed RNN for speed
+mixing_embed_dim: 64  # Reduced mixer network size
+hypernet_layers: 1  # Reduced hypernet complexity
+hypernet_embed: 64  # Reduced hypernet size
+use_cuda: True  # Ensured GPU usage
+use_torch_amp: True  # Added mixed precision
+hidden_dim: 64  # Specified network size
+t_max: 2000000
+name: "qmix_fast"
+save_model_interval: 200000

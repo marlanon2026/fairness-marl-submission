@@ -1,0 +1,53 @@
+# --- VDN Testing/Profiling Configuration ---
+
+# Use epsilon greedy with faster annealing for testing
+action_selector: "epsilon_greedy"
+epsilon_start: 1.0
+epsilon_finish: 0.15
+epsilon_anneal_time: 5000  # Drastically reduced for testing
+evaluation_epsilon: 0.0
+
+# Use episode runner but with minimal episodes
+runner: "episode"
+
+# Minimal buffer settings for testing
+buffer_size: 5000  # Reduced 10x for testing
+batch_size: 256    # Smaller batches for quicker iterations
+
+# Higher learning rate without complex decay for testing
+lr: 0.002
+lr_scheduler: False  # Disable scheduler for testing
+# lr_decay_steps and lr_decay_rate removed for testing
+
+# More frequent target updates for testing
+target_update_interval_or_tau: 5  # Update target more frequently in testing
+
+# Observation settings (unchanged)
+obs_agent_id: True
+obs_last_action: False
+obs_individual_obs: False
+
+# Core VDN configuration with simplifications for testing
+standardise_returns: False
+standardise_rewards: False
+agent_output_type: "q"
+learner: "q_learner"
+double_q: True
+use_rnn: False  # Disable RNN for faster testing
+mixer: "vdn"
+
+# Drastically reduced timesteps for testing
+t_max: 5000  # Only 10k timesteps instead of 1M
+
+# More frequent model saving for testing progress tracking
+save_model_interval: 2000
+
+# Testing-specific parameters
+test_nepisode: 5       # Reduced test episodes
+test_interval: 1000    # More frequent testing 
+log_interval: 200      # More frequent logging
+
+# Add smaller network size
+hidden_dim: 32  # Small network for faster computation
+
+name: "vdn_test"
