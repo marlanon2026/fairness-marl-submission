@@ -39,4 +39,5 @@ plots
 *.th
 *.slurm
 *slurm_scripts
-*.diff
+*.diff!requirements.txt
+README.md.original_backup
