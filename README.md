@@ -1,251 +1,264 @@
-# 🏥 Hosp_Robotouille: Hospital Task Simulator
-<a name="readme-top"></a> 
+# 🏥 MARL Benchmark
+<a name="readme-top"></a>
 
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-    </li>
+    <li><a href="#about-the-project">About The Project</a></li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#setup">Setup</a></li>
       </ul>
     </li>
-    <li><a href="#repository-outline-with-major-directories">Repository Outline with Major Directories</a></li>
+    <li><a href="#repository-outline">Repository Outline</a></li>
     <li>
       <a href="#usage">Usage</a>
       <ul>
-        <li><a href="#use-existing-environments">Use Existing Environments</a></li>
-        <li><a href="#create-your-own-environment">Create your own Environment!</a></li>
-        <li><a href="#changing-environments">Changing Environments</a></li>
+        <li><a href="#play-mode-interactive">Play Mode (Interactive)</a></li>
+        <li><a href="#existing-environments">Existing Environments</a></li>
+        <li><a href="#creating-your-own-environment">Creating Your Own Environment</a></li>
       </ul>
     </li>
-    <li><a href="#running-marl">Running MARL</a></li>
-    <li><a href="#contributing">Contributing</a></li>
+    <li>
+      <a href="#training-and-reproducing-paper-experiments">Training and Reproducing Paper Experiments</a>
+      <ul>
+        <li><a href="#algorithm-selection">Algorithm Selection</a></li>
+        <li><a href="#fairness-configuration">Fairness Configuration</a></li>
+        <li><a href="#quick-sanity-check">Quick Sanity Check</a></li>
+        <li><a href="#full-training-run">Full Training Run</a></li>
+        <li><a href="#reproducing-all-paper-conditions">Reproducing All Paper Conditions</a></li>
+      </ul>
+    </li>
     <li><a href="#built-with">Built With</a></li>
     <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-In future healthcare systems, robots will collaborate with medical professionals in real-time critical settings. To prepare them, we need to simulate complex sequences of collaborative medical actions such as administering medications, performing CPR, or assisting in triage decisions. We can teach robots to break down complex tasks by showing them how to perform easier tasks, subtasks, and then combine those subtasks to perform harder tasks. 
+<p align="middle">
+  <img src="README_assets/MARL_video_simulator.gif" alt="A team of healthcare workers performing CPR, rescue breaths, and giving medication to a patient" width="250" height="250"/>
+</p>
 
-**Hosp_Robotouille** transforms the original cooking-based Robotouille simulator into a hospital ER simulator, enabling reinforcement learning agents to train on tasks like `givemedicine`, `rescuebreaths`, and more. These tasks stress test both coordination and specialization across agents.
+In future healthcare systems, robots will collaborate with medical professionals in real-time critical settings. To prepare them, we need to simulate complex sequences of collaborative medical actions such as administering medications, performing CPR, and assisting in triage decisions. Agents can be taught to break down complex tasks by composing simpler subtasks.
+
+This benchmark transforms the original cooking-based Robotouille simulator into a hospital ER simulator, enabling reinforcement learning agents to train on tasks like `givemedicine`, `rescuebreaths`, and more. These tasks stress-test both coordination and specialization across heterogeneous agents, and provide an environment for evaluating fairness-aware multi-agent reinforcement learning.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
-
 ## Getting Started
-
-It is super easy to get started by trying out an existing environment or creating your own environment!
 
 ### Setup
 
-1. Create and activate your virtual environment
+1. Create and activate a virtual environment:
    ```sh
    python3 -m venv <venv-name>
    source <venv-name>/bin/activate
    ```
-2. Install Hosp_Robotouille and its dependencies
+2. Install the benchmark and its dependencies:
    ```sh
    pip install -e .
    ```
-3. Run Robotouille!
-
+3. Run the simulator:
    ```sh
    python main.py
    ```
-
-   or import the simulator to any code by adding
-
+   Or import it from your own code:
    ```python
    from robotouille import simulator
-
    simulator("original")
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Repository Outline with Major Directories
-- `robotouille/` - Core environment logic and simulator
-- `environments/env_generator/examples` - JSON definitions to init envs
-- `environments/robotouille/` - PDDL corresponding to JSON definitions
-- `epymarl/` - Epymarl integration for MARL training
-- `utils/` - Environment wrappers, RL inputs and utils, reward functions
+## Repository Outline
+
+- `robotouille/` — Core environment logic and simulator
+- `environments/env_generator/examples/` — JSON definitions for initializing environments
+- `environments/robotouille/` — PDDL files corresponding to the JSON definitions
+- `epymarl/` — EPyMARL integration for MARL training
+- `utils/` — Environment wrappers, RL inputs, reward handlers, and fairness components
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Usage
 
-### Use Existing Environments
+### Play Mode (Interactive)
 
-To play an existing environment, you can choose from the JSON files under `environments/env_generator/examples/`. For example, to play the `multiagent_test` environment, simply run
+To play an environment interactively with keyboard and mouse:
+
+```sh
+python main.py --environment_name multiagent_rescuebreaths --mode PLAY
+```
+
+Controls:
+- Click to move the agent to stations and pick up or place objects. Stack and unstack are also click-based.
+- `e` performs treatment tasks at stations or on patients.
+- `space` waits in place or switches the active agent (e.g., while a station is occupied).
+
+### Existing Environments
+
+Environment definitions live as JSON files in `environments/env_generator/examples/`. To run a specific environment:
 
 ```sh
 python main.py --environment_name multiagent_test
 ```
 
-You can interact with the environment with keyboard and mouse, using the following keys:
-
-- Click to move the robot to stations and pick up or place down objects. You can also stack and unstack objects by clicking.
-- 'e' can be used to perform treatment tasks at stations or on patients.
-- 'space' can be used to stay in place/ change agent selected (e.g. you are waiting for a station to be freed )
-
-If you would like to procedurally generate an environment based off a JSON file, run the following commands
+To procedurally generate variants from a base JSON:
 
 ```sh
 python main.py --environment_name multiagent_test --seed 42
 python main.py --environment_name multiagent_test --seed 42 --noisy_randomization
 ```
-Refer to the `README.md` under `environments/env_generator` for details on procedural generation.
 
+See `environments/env_generator/README.md` for details on procedural generation.
 
-### Changing Environments
-To explore or benchmark different tasks, change --env-name to any of the supported names, such as:
-- multiagent_givemedicine_specforced_coop
-- multiagent_rescuebreaths_specskilled_energy
+To switch between tasks during training, change `--env-name` to any of the supported environments, such as:
+- `multiagent_givemedicine_specforced_coop`
+- `multiagent_rescuebreaths_specsimplemoreskills`
+- `multiagent_rescuebreaths_specskilled_energy`
 
-These names are linked to environment definitions in 'robotouille/env_generator'.
+### Creating Your Own Environment
 
-### Create your own Environment!
-
-Add JSON files under environments/env_generator/examples/. Also, add a corresponding PDDL file in environments/robotouille/.
-Contact us if you'd like to customize PDDL mechanics or actions. If you would like to modify the transitions of the environment entirely, refer to `robotouille.pddl` under `environments`. We currently have limited support for customization through the PDDL for non-Markovian actions (cut / cook) and for rendering new objects / actions but plan to add more support in the future. Please contact us for more details if interested.
+Add a JSON file under `environments/env_generator/examples/` and a corresponding PDDL file in `environments/robotouille/`. The transition logic lives in `robotouille.pddl` under `environments/`. The current implementation has limited support for non-Markovian actions (cut, cook) and for rendering new objects/actions; we plan to extend this.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Running MARL: 
+## Training and Reproducing Paper Experiments
 
-Hosp_Robotouille supports integration with Epymarl for multi-agent reinforcement learning.
+Training uses the integrated [EPyMARL](https://github.com/uoe-agents/epymarl) framework. The fairness penalty is configured via environment variables; the algorithm and environment are selected via standard EPyMARL flags.
 
-### Modes
-Set mode in robotouille_simulator.py:
+### Algorithm Selection
 
-```python
-self.mode = Mode.PLAY   # interact with keyboard on renderer
-self.mode = Mode.TRAIN  # RL training
-self.mode = Mode.LOAD   # load and test agent
-```
+Algorithm choice is controlled via the `--config` flag, which corresponds to a YAML file in `epymarl/config/algs/`. Common options:
 
-### Selecting Training Algorithms 
-Supports a variety of MARL algorithms. The choice of algorithm is controlled via the --config flag when launching training scripts and corresponds to YAML configuration files found in: 
-`epymarl/config/algs/` 
+- `qmix.yaml` — Value-decomposition for cooperative settings (used in the paper)
+- `mappo.yaml` — Multi-Agent Proximal Policy Optimization
+- `vdn.yaml` — Simpler value decomposition
+- `coma.yaml` — Counterfactual Multi-Agent Policy Gradients
 
-Each YAML file defines hyperparameters and structural components for a particular algorithm. Some commonly used configs include:
+Each YAML defines hyperparameters and structural components. To extend or add algorithms, modify `epymarl/learners/` and `epymarl/controllers/` and link them via the YAML config.
 
-+ mappo.yaml – Multi-Agent Proximal Policy Optimization (recommended for stability and scalability)
-+ coma.yaml – Counterfactual Multi-Agent Policy Gradients (best for discrete action spaces with dense rewards)
-+ qmix.yaml – Value-decomposition for cooperative settings
-+ vdn.yaml – Simpler value decomposition (used for baselines or low-complexity tasks)
+### Fairness Configuration
 
-Example:
+The paper's fixed-penalty conditions are configured through environment variables read by the reward handlers in `utils/`:
+
+| Variable | Values used in paper | Description |
+|---|---|---|
+| `USE_FAIRNESS` | `True` | Enable workload-based fairness reward shaping |
+| `LAMBDA_FAIRNESS` | `0`, `10`, `30`, `50` | Fixed-penalty weight (`0` = no-fairness baseline) |
+| `FAIRNESS_ALPHA` | `0`, `1.0` | Workload/skill trade-off (composite objective `L3 = αL1 + (1−α)L2`) |
+| `INITIAL_LAMBDA` | `0` | Starting λ for adaptive schedules |
+| `WARMUP_EPISODES` | `0` | Warmup before λ updates |
+| `SCHEDULE_TYPE` | `constant` | λ schedule type for fixed-penalty runs |
+| `OBSERVATION_MODE` | `LARGE` | Observation tensor configuration |
+
+The FEN baseline uses a separate set of variables (see *Reproducing All Paper Conditions* below).
+
+### Quick Sanity Check
+
+A short single-seed run that verifies the environment loads, the fairness handler attaches, and training proceeds. Runtime is roughly 10–20 minutes on a single GPU.
+
 ```sh
-python epymarl/main.py --config=mappo ...
-```
-This command uses the `epymarl/config/algs/mappo.yaml` file to initialize the training process with MAPPO.
-You can modify or extend algorithm configs by:
-- Adjusting learning rates, batch sizes, entropy regularization
-
-- Switching network architectures (e.g. recurrent vs feedforward)
-
-- Changing value mixing strategies in cooperative agents
-
-Advanced users can also implement custom algorithms by extending Epymarl/ `learners/` and `controllers/` directories and linking their logic in the YAML config.
-
-### Training via Epymarl
-
-Following is an example of the terminal command to test an algorithm in an environment: 
-```sh
+USE_FAIRNESS=True LAMBDA_FAIRNESS=10 FAIRNESS_ALPHA=0 \
+INITIAL_LAMBDA=0 WARMUP_EPISODES=0 SCHEDULE_TYPE=constant \
+OBSERVATION_MODE=LARGE \
 python epymarl/main.py \
-    --config=mappo \
-    --env-config=gymma with env_args.time_limit=50 \
-    --env-name=multiagent_givemedicine_specforced_coop \
-    --note="100nquad_unscaledrewardforced_coop_givemedicine_mappo" \
-    --tags="100n forced_coop givemedicine mappo name=multiagent_rescuebreaths_specskilled_energy"
+    --config=qmix \
+    --env-config=gymma \
+    with env_args.time_limit=0 \
+    env_args.observation_mode=LARGE \
+    t_max=200000 \
+    test_interval=2000 \
+    test_nepisode=50 \
+    seed=123 \
+    --env-name=multiagent_rescuebreaths_specsimplemoreskills
 ```
 
-Explanation of Flags:
---config: Selects the RL algorithm config from epymarl/config/algs/ (e.g., mappo.yaml).
+### Full Training Run
 
+A single full-length run matching the paper (40M timesteps, fixed-λ workload fairness):
 
---env-config=gymma: Specifies the wrapper config used by Epymarl (must be gymma for Gym environments).
+```sh
+USE_FAIRNESS=True LAMBDA_FAIRNESS=10 FAIRNESS_ALPHA=0 \
+INITIAL_LAMBDA=0 WARMUP_EPISODES=0 SCHEDULE_TYPE=constant \
+OBSERVATION_MODE=LARGE \
+python epymarl/main.py \
+    --config=qmix \
+    --env-config=gymma \
+    with env_args.time_limit=0 \
+    env_args.observation_mode=LARGE \
+    t_max=40000000 \
+    test_interval=2000 \
+    save_model_interval=10000000 \
+    test_nepisode=200 \
+    seed=123 \
+    --env-name=multiagent_rescuebreaths_specsimplemoreskills \
+    use_cuda=True \
+    buffer_cpu_only=False \
+    checkpoint_path="checkpoints/qmix_l10_a0_s123"
+```
 
+### Reproducing All Paper Conditions
 
-with env_args.time_limit=50: Override default environment arguments from env_args. Sets episode length to 50.
+The paper reports five seeds (`12345, 23456, 34567, 45678, 56789`).
 
+**No-fairness baseline and fixed-λ conditions** use the *Full Training Run* command above, varying `LAMBDA_FAIRNESS`:
 
---env-name: Matches the registered name in the Gym registry (e.g., multiagent_givemedicine_specforced_coop). This name should correspond to a file or spec in robotouille/env_generator or the gymma wrapper.
+| Condition | LAMBDA_FAIRNESS | FAIRNESS_ALPHA |
+|---|---|---|
+| No fairness baseline | `0` | `0` |
+| Fixed λ=10 | `10` | `0` |
+| Fixed λ=30 | `30` | `0` |
+| Fixed λ=50 | `50` | `0` |
 
+**FEN baseline** uses a different reward mechanism, environment, and hyperparameter set:
 
---note: A descriptive string saved with experiment logs/checkpoints.
+```sh
+USE_FAIRNESS=false USE_FAIR_GNE=false \
+REWARD_TYPE=fen FEN_WEIGHT=1.0 FEN_C=1.0 FEN_EPSILON=1e-6 \
+OBSERVATION_MODE=LARGE \
+python epymarl/main.py \
+    --config=qmix \
+    --env-config=gymma \
+    with env_args.time_limit=50 \
+    env_args.observation_mode=LARGE \
+    batch_size=64 \
+    batch_size_run=1 \
+    buffer_cpu_only=True \
+    buffer_size=2500 \
+    lr=0.0005 \
+    optim_alpha=0.99 \
+    optim_eps=0.00001 \
+    grad_norm_clip=10 \
+    t_max=40000000 \
+    test_interval=50000 \
+    save_model_interval=1000000 \
+    test_nepisode=10 \
+    seed=123 \
+    --env-name=multiagent_rescuebreaths_specsimplefen \
+    use_cuda=True \
+    checkpoint_path="checkpoints/qmix_fen_s123"
+```
 
-
---tags: Useful for grouping experiment metadata, like number of agents (100n), reward structure (unscaledrewardforced), task name, or algorithm.
-
-
-You can launch these manually through the above command or by running `slurm scripts`. 
+Run each of the four fixed-λ conditions plus FEN with all five seeds: 25 runs total (4 × 5 + 5).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Running RL:
+## Built With
 
-Running RL:
-We have integrated robust reinforcement learning (RL) capabilities into Robotouille, allowing users to explore and train RL agents within our diverse cooking environments. This section guides you through the process of setting up and running RL algorithms with Robotouille.
+- [EPyMARL](https://github.com/uoe-agents/epymarl) — Multi-agent RL framework
+- [PDDLGym](https://github.com/tomsilver/pddlgym) — PDDL-based environment interface
+- [PyGame](https://www.pygame.org/) — Rendering
 
-Setup for RL Training:
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-1. Initialize the Environment: First, ensure that you have set up Robotouille as per the instructions in the Setup section. In robotouille/robotouille_simulator, you can change the mode to be mode.PLAY, mode.TRAIN, or mode.LOAD. When using RL (mode.TRAIN or mode.LOAD), the model gets saved/loaded in from the file field. We do not support changing the run configuration through terminal at this point.
+## License
 
-2. Select an RL Algorithm: Robotouille supports various RL algorithms. You can choose from standard options like Proximal Policy Optimization (PPO) and Advantage Actor Critic (A2C), among others. The choice of algorithm can significantly affect how the agent learns and performs tasks in the cooking environment. You can either load a pretrained PPO model or train one from scratch per simulation.
+See `LICENSE`.
 
-3. Configure the Algorithm: Modify the algorithm's parameters to suit your specific requirements. This could include setting the learning rate, the number of training episodes, or the reward structure. We provide a default configuration, but encourage experimentation for optimal results. A good metric might be 500,000 timesteps. You can change how the agent learns in robotouille/robotouille_simulator by changing between PPO/A2C and changing the run parameters of n_steps and total_timesteps. You can change the episode length (how many steps a robot can take in an environment before truncating) by changing self.max_steps in utils/rl_wrapper.
-
-
-Running the Training:
-To initiate the training process, follow these steps:
-
-1. Launch the Training Script: Run the training script with the chosen environment and RL algorithm. You can use a command like:
-
-2. Monitor the Training: Training an RL agent can be time-consuming. Monitor the agent's progress through the logs or visualizations provided. Watching the agent learn and adapt over time can offer valuable insights into the effectiveness of your chosen RL setup.
-
-3. Evaluate the Agent: After the training is complete, evaluate the agent's performance. We provide tools to test the agent in the environment, allowing you to assess its ability to perform cooking tasks with efficiency and accuracy.
-
----
-
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#setup">Setup</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#usage">Usage</a>
-      <ul>
-        <li><a href="#use-existing-environments">Use Existing Environments</a></li>
-        <li><a href="#create-your-own-environment">Create your own Environment!</a></li>
-      </ul>
-    </li>
-    <li><a href="#contributing">Contributing</a></li>
-  </ol>
-</details>
-
-<!-- ABOUT THE PROJECT -->
-
-## About The Project
-
-<p align="middle">
-  <img src="README_assets/MARL_video_simulator.gif" alt="A team of Healthcare workers performing give medicine on a patient starting from giving CPR , then rescue breathes , then giving air, before finally giving mediine ]" width="250" height="250"/>
-</p>
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
