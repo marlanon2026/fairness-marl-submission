@@ -446,7 +446,7 @@ class EpisodeRunner:
             if episode_actions:
                 log_prefix = "test_" if test_mode else "train_"
                 episode_id = self.test_episode_id if test_mode else self.train_episode_id
-                print(f"[{log_prefix}Episode {episode_id}] Actions: {episode_actions}")
+                # print(f"[{log_prefix}Episode {episode_id}] Actions: {episode_actions}")  # silenced for cleaner output
         # Record episode length
         episode_lengths = self.test_episode_lengths if test_mode else self.train_episode_lengths
         episode_lengths.append(self.t)

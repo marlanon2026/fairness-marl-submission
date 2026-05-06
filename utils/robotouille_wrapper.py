@@ -746,7 +746,7 @@ class RobotouilleWrapper(gym.Wrapper):
             #     "workload_counts": workloads
             # }
             
-            print(f"[TEST FAIRNESS] JFI: {jfi:.3f}, L1: {L1_raw:.3f}, L2: {L2:.3f}, L3: {L3:.3f}")
+            # print(f"[TEST FAIRNESS] JFI: {jfi:.3f}, L1: {L1_raw:.3f}, L2: {L2:.3f}, L3: {L3:.3f}")  # silenced
         # ============================================================
 
         # ===== EPISODE-END FAIR-GNE PROCESSING =====        
