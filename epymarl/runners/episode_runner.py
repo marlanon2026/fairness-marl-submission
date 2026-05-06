@@ -229,8 +229,8 @@ class EpisodeRunner:
             missing = expected_keys - available_keys
             if missing and missing != self.debug_missing_metrics:
                 self.debug_missing_metrics = missing
-                print(f"[DEBUG] Info keys available: {sorted(available_keys)}")
-                print(f"[DEBUG] Missing expected keys: {sorted(missing)}")
+                # print(f"[DEBUG] Info keys available: {sorted(available_keys)}")
+                # print(f"[DEBUG] Missing expected keys: {sorted(missing)}")
         
         # Try to extract fairness metrics
         if 'fairness_metrics' in info:

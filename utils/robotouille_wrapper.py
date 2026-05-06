@@ -1577,19 +1577,19 @@ class RobotouilleWrapper(gym.Wrapper):
         """
         result = self._last_episode_metrics if hasattr(self, '_last_episode_metrics') else None
         
-        # ===== DEBUG LOGGING =====
-        print(f"\n[get_last_fairness_metrics] Called")
-        print(f"  hasattr: {hasattr(self, '_last_episode_metrics')}")
-        print(f"  result is None: {result is None}")
-        if result:
-            print(f"  Keys: {list(result.keys())}")
-            print(f"  JFI: {result.get('jfi', 'MISSING')}")
-            print(f"  L1: {result.get('L1', 'MISSING')}")
-            print(f"  fair_gne_enabled: {result.get('fair_gne_enabled', 'MISSING')}")
-        else:
-            print(f"  ❌ RETURNING NONE!")
-            if hasattr(self, '_last_episode_metrics'):
-                print(f"  _last_episode_metrics value: {self._last_episode_metrics}")
+        # ===== DEBUG LOGGING (disabled) =====
+        # print(f"\n[get_last_fairness_metrics] Called")
+        # print(f"  hasattr: {hasattr(self, '_last_episode_metrics')}")
+        # print(f"  result is None: {result is None}")
+        # if result:
+        #     print(f"  Keys: {list(result.keys())}")
+        #     print(f"  JFI: {result.get('jfi', 'MISSING')}")
+        #     print(f"  L1: {result.get('L1', 'MISSING')}")
+        #     print(f"  fair_gne_enabled: {result.get('fair_gne_enabled', 'MISSING')}")
+        # else:
+        #     print(f"  RETURNING NONE")
+        #     if hasattr(self, '_last_episode_metrics'):
+        #         print(f"  _last_episode_metrics value: {self._last_episode_metrics}")
         # =========================
         
         return result
