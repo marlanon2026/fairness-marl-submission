@@ -43,9 +43,9 @@
   <img src="README_assets/MARL_video_simulator.gif" alt="A team of healthcare workers performing CPR, rescue breaths, and giving medication to a patient" width="250" height="250"/>
 </p>
 
-In future healthcare systems, robots will collaborate with medical professionals in real-time critical settings. To prepare them, we need to simulate complex sequences of collaborative medical actions such as administering medications, performing CPR, and assisting in triage decisions. Agents can be taught to break down complex tasks by composing simpler subtasks.
+We introduce MARLHospital, the first diagnostic benchmark designed specifically to expose when workload-only fairness metrics fail in heterogeneous cooperative teams. Unlike existing benchmarks, MARLHospital combines skill heterogeneity, energy constraints, and sequential task dependencies to create conditions where workload balance and skill-task alignment can diverge measurably. 
 
-This benchmark transforms the original cooking-based Robotouille simulator into a hospital ER simulator, enabling reinforcement learning agents to train on tasks like `givemedicine`, `rescuebreaths`, and more. These tasks stress-test both coordination and specialization across heterogeneous agents, and provide an environment for evaluating fairness-aware multi-agent reinforcement learning.
+ We define two goals in MARLHospital, Partial (P) and Complete (C), with task difficulties based on the length of the time horizon. For the CPR goal, HCWs must perform CPR: a short time horizon task consisting of picking up and placing a board under the patient and giving $N$ chest compressions. For the rescue breaths goal (longer horizon), HCWs must additionally pick up the BVM and place it on the patient to give oxygen. These goals can be modified via JSON configuration files, allowing users to programmatically specify parameters such as compression counts, breath requirements, agents' skill levels, and equipment needs without modifying simulator code.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -253,6 +253,7 @@ Run each of the four fixed-λ conditions plus FEN with all five seeds: 25 runs t
 
 - [EPyMARL](https://github.com/uoe-agents/epymarl) — Multi-agent RL framework
 - [PDDLGym](https://github.com/tomsilver/pddlgym) — PDDL-based environment interface
+- [Robotouille](https://github.com/portal-cornell/robotouille)- PDDL builder
 - [PyGame](https://www.pygame.org/) — Rendering
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
