@@ -1450,7 +1450,7 @@ class RobotouilleWrapper(gym.Wrapper):
         
         # ===== ADD FAIR-GNE METRICS (NEW) =====
         fair_gne_data = {}
-        print("Fair-GNE:", self._use_fair_gne, "has_metrics:", hasattr(self, "_last_fair_gne_metrics"))
+        # print("Fair-GNE:", self._use_fair_gne, "has_metrics:", hasattr(self, "_last_fair_gne_metrics"))
         if self._use_fair_gne and hasattr(self, '_last_fair_gne_metrics'):
             fair_gne_data = {
                 "enabled": True,
