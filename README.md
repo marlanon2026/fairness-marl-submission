@@ -43,9 +43,25 @@
   <img src="README_assets/MARL_video_simulator.gif" alt="A team of healthcare workers performing CPR, rescue breaths, and giving medication to a patient" width="250" height="250"/>
 </p>
 
-We introduce MARLHospital, the first diagnostic benchmark designed specifically to expose when workload-only fairness metrics fail in heterogeneous cooperative teams. Unlike existing benchmarks, MARLHospital combines skill heterogeneity, energy constraints, and sequential task dependencies to create conditions where workload balance and skill-task alignment can diverge measurably. 
+We introduce MARLHospital, the first diagnostic benchmark designed specifically to expose when workload-only fairness metrics fail in heterogeneous cooperative teams. Unlike existing benchmarks, MARLHospital combines skill heterogeneity, energy constraints, and sequential task dependencies to create conditions where workload balance and skill-task alignment can diverge measurably.
 
- We define two goals in MARLHospital, Partial (P) and Complete (C), with task difficulties based on the length of the time horizon. For the CPR goal, HCWs must perform CPR: a short time horizon task consisting of picking up and placing a board under the patient and giving $N$ chest compressions. For the rescue breaths goal (longer horizon), HCWs must additionally pick up the BVM and place it on the patient to give oxygen. These goals can be modified via JSON configuration files, allowing users to programmatically specify parameters such as compression counts, breath requirements, agents' skill levels, and equipment needs without modifying simulator code.
+We define two goals in MARLHospital, Partial (P) and Complete (C), with task difficulties based on the length of the time horizon. For the CPR goal, agents must perform CPR: a short time horizon task consisting of picking up and placing a board under the patient and giving $N$ chest compressions. For the rescue breaths goal (longer horizon), agents must additionally pick up the BVM and place it on the patient to give oxygen. These goals can be modified via JSON configuration files, allowing users to programmatically specify parameters such as compression counts, breath requirements, agents' skill levels, and equipment needs without modifying simulator code.
+
+### Foundation
+
+MARLHospital is released under the MIT license. It implements the EPyMARL `MultiAgentEnv` interface and integrates with EPyMARL and PyMARL without modification. We build on the Robotouille PDDL infrastructure (originally developed for LLM planning in a cooking domain) and replace both the domain (with hospital resuscitation tasks) and the planning interface (with a MARL state wrapper exposing skill levels and energy dynamics). The PDDL backend is retained for symbolic action preconditions and procedural problem generation.
+
+### Configuration System
+
+Team compositions, skill distributions, task parameters, agent counts, and energy dynamics are specified through JSON configuration files. The PDDL builder procedurally generates agent identifiers and skill-conditioned action preconditions at initialization, so researchers can define new heterogeneity profiles without modifying simulator code.
+
+### Observation Space and Metrics
+
+Skills are encoded as one-hot vectors in every agent's observation. Fairness metrics ($L_1$, $L_2$, $L_3$, alignment score, workload range) are returned in the `info` dictionary at episode end.
+
+### Task Structure and Clinical Validation
+
+Task structures follow the American Red Cross Adult Basic Life Support protocols and were reviewed with emergency department clinicians. MARLHospital is a research benchmark for algorithm development and is not intended for clinical deployment.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -55,23 +71,23 @@ We introduce MARLHospital, the first diagnostic benchmark designed specifically 
 ### Setup
 
 1. Create and activate a virtual environment:
-   ```sh
+```sh
    python3 -m venv <venv-name>
    source <venv-name>/bin/activate
-   ```
+```
 2. Install the benchmark and its dependencies:
-   ```sh
+```sh
    pip install -e .
-   ```
+```
 3. Run the simulator:
-   ```sh
+```sh
    python main.py
-   ```
+```
    Or import it from your own code:
-   ```python
+```python
    from robotouille import simulator
    simulator("original")
-   ```
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -253,13 +269,13 @@ Run each of the four fixed-λ conditions plus FEN with all five seeds: 25 runs t
 
 - [EPyMARL](https://github.com/uoe-agents/epymarl) — Multi-agent RL framework
 - [PDDLGym](https://github.com/tomsilver/pddlgym) — PDDL-based environment interface
-- [Robotouille](https://github.com/portal-cornell/robotouille)- PDDL builder
+- [Robotouille](https://github.com/portal-cornell/robotouille) — PDDL builder
 - [PyGame](https://www.pygame.org/) — Rendering
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## License
 
-See `LICENSE`.
+Released under the MIT License. See `LICENSE` for details.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
