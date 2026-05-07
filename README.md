@@ -40,7 +40,7 @@
 ## About The Project
 
 <p align="middle">
-  <img src="README_assets/simulator_demo.mp3" alt="A team of healthcare workers performing CPR, rescue breaths, and giving medication to a patient" width="250" height="250"/>
+  <img src="README_assets/MARL_video_simulator.gif" alt="A team of healthcare workers performing CPR, rescue breaths, and giving medication to a patient" width="250" height="250"/>
 </p>
 
 We introduce MARLHospital, the first diagnostic benchmark designed specifically to expose when workload-only fairness metrics fail in heterogeneous cooperative teams. Unlike existing benchmarks, MARLHospital combines skill heterogeneity, energy constraints, and sequential task dependencies to create conditions where workload balance and skill-task alignment can diverge measurably. 
