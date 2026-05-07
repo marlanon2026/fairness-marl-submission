@@ -111,10 +111,25 @@ To play an environment interactively with keyboard and mouse:
 python main.py --environment_name multiagent_rescuebreaths --mode PLAY
 ```
 
-Controls:
-- Click to move the agent to stations and pick up or place objects. Stack and unstack are also click-based.
-- `e` performs treatment tasks at stations or on patients.
-- `space` waits in place or switches the active agent (e.g., while a station is occupied).
+#### Controls
+
+- **Click** on a station to move the active agent there and pick up or place objects. Stacking and unstacking are also click-based.
+- **`spacebar`** waits in place or switches the active agent (e.g., when a station is occupied or you need a different agent to act).
+- **`e`** triggers special actions at the agent's current station: `stackunder`, `compresschest`, `giverescuebreaths`, `giveshock`, `givemedicine`. The number of `e` presses required for each action is configured via `num_compressions`, `num_breaths`, `num_shocks`, and `num_medicine_doses` in the environment JSON.
+
+#### Walkthrough: Complete Resuscitation Sequence
+
+The following walkthrough completes the full goal state (CPR + rescue breaths + shock + medicine):
+
+1. **CPR board.** Pick up the CPR board from the cart, move to the patient, place the board on the patient. Press `e` **once** to trigger `stackunder` (places the board *under* the patient).
+2. **Chest compressions.** Press `e` **three times** to perform `compresschest`. Visual effect: a red CPR icon appears on the patient's chest.
+3. **Rescue breaths.** Pick up the pump from the cart, place it on the patient. Press `e` **twice** to perform `giverescuebreaths`. Visual effect: a blue mouth-to-mouth icon appears on the patient's chest.
+4. **Shock.** Pick up the AED from the cart, place it on the patient. Press `e` **once** to perform `giveshock`. Visual effect: a shock sign appears on the patient's chest.
+5. **Medicine.** Pick up the syringe from the cart, place it on the patient. Press `e` **once** to perform `givemedicine`. Visual effect: a syringe is placed on the patient's arm.
+
+This completes the goal state.
+
+> **Note:** Use `spacebar` for all agent movement and item pickup/placement. The `e` key is reserved for triggering the special action at the agent's current station.
 
 ### Existing Environments
 
