@@ -1,0 +1,15 @@
+This repository contains code derived from third-party projects.
+
+epymarl/       Derived from EPyMARL and PyMARL, licensed under the Apache
+               License, Version 2.0. See LICENSES/Apache-2.0-EPyMARL-PyMARL.txt.
+               Files in this directory have been modified by the authors of
+               this repository.
+
+environments/  Contains code derived from PDDLGym, licensed under the MIT
+               License. See LICENSES/MIT-PDDLGym.txt.
+               PDDLGym incorporates components derived from Fast Downward,
+               licensed under GPL-3.0. The applicable GPL-3.0 terms govern
+               those components.
+
+All other code in this repository is original work of the authors and is
+licensed under the MIT License in LICENSE.
